@@ -25,23 +25,19 @@ class_mapping = {
     9: 'garbage'
 }
 
-# Class importance weights (you can adjust these if some classes are more critical)
-original_weights = {
-    0: 0.5,  # clean_indian → positive class, low impact
-    1: 0.5,  # clean_urinal
-    2: 0.5,  # clean_western
-    3: 4,    # damage
-    4: 3,    # dirty_basin
-    5: 4,    # dirty_floor
-    6: 4,    # dirty_indian
-    7: 3,    # dirty_urinal
-    8: 4,    # dirty_western
-    9: 5     # garbage → most severe
+# Class importance weights (clean = reward / dirty = penalty)
+weights = {
+    0: -1.0,  # clean_indian
+    1: -1.0,  # clean_urinal
+    2: -1.0,  # clean_western
+    3: 4.0,   # damage
+    4: 5.0,   # dirty_basin
+    5: 6.0,   # dirty_floor
+    6: 6.0,   # dirty_indian
+    7: 5.0,   # dirty_urinal
+    8: 6.0,   # dirty_western
+    9: 8.0    # garbage
 }
-
-# Normalize weights to a 0–10 scale
-total_weight = sum(original_weights.values())
-normalized_weights = {cls: (wt / total_weight * 10) for cls, wt in original_weights.items()}
 
 
 @app.route("/", methods=["GET"])
@@ -74,9 +70,9 @@ def predict():
             raw_score = 0
             class_confidence_dict = defaultdict(list)
 
-            # Weighted cleanliness scoring
+            # Weighted scoring
             for cls_id, conf in zip(class_ids, confidences):
-                weight = normalized_weights.get(cls_id, 1.0)
+                weight = weights.get(cls_id, 1.0)
                 raw_score += weight * conf
                 class_confidence_dict[cls_id].append(conf)
 
@@ -91,7 +87,7 @@ def predict():
                     "class": class_mapping.get(cls_id, str(cls_id)),
                     "count": len(conf_list),
                     "avg_conf": round(avg_conf, 2),
-                    "weight": round(normalized_weights.get(cls_id, 1.0), 2)
+                    "weight": weights.get(cls_id, 1.0)
                 })
 
             responses.append({
