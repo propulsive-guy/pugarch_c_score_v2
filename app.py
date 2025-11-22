@@ -30,13 +30,13 @@ weights = {
     0: -1.0,  # clean_indian
     1: -1.0,  # clean_urinal
     2: -1.0,  # clean_western
-    3: 4.0,   # damage
-    4: 5.0,   # dirty_basin
-    5: 6.0,   # dirty_floor
-    6: 6.0,   # dirty_indian
-    7: 5.0,   # dirty_urinal
-    8: 6.0,   # dirty_western
-    9: 8.0    # garbage
+    3: 4.0,  # damage
+    4: 5.0,  # dirty_basin
+    5: 7.0,  # dirty_floor
+    6: 10.0,  # dirty_indian (high priority)
+    7: 9.0,  # dirty_urinal (very high)
+    8: 10.0,  # dirty_western (high priority)
+    9: 3.0,  # garbage (low impact)
 }
 
 
